@@ -1,0 +1,8 @@
+From: broken@example.com
+To: testml@example.com
+Subject: 壊れたメールのテスト
+Date: Tue, 7 Jul 2026 12:00:00 +0900
+Message-Id: <broken@example.com>
+Content-Type: multipart/mixed
+
+boundaryパラメータが無いためパースできない本文です。

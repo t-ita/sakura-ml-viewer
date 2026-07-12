@@ -1,0 +1,11 @@
+# mod_rewriteの per-directory ruleset はディレクトリ単位で独立しており、この
+# .htaccessが RewriteEngine On を宣言した時点で親(backend/public/.htaccess)の
+# HTTPS強制ルールは継承されない。API配下でも平文HTTPを受理しないよう明示的に複製する。
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# このディレクトリへの全リクエストを index.php (フロントコントローラ) に集約する。
+# ?route=/... 形式のフォールバックは router.php 側で対応済み。
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]

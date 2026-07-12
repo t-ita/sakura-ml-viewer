@@ -1,0 +1,19 @@
+# Backend local config / runtime artifacts
+backend/app/config.php
+backend/tests/tmp/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.log
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS / editor
+.DS_Store
+*.swp
+
+# ローカル専用のレビュー記録（リポジトリには含めない）
+REVIEW.md

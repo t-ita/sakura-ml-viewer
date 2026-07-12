@@ -1,0 +1,18 @@
+From: Suzuki <suzuki@example.com>
+To: testml@example.com
+Subject: HTML/プレーンテキスト両方を含むメール
+Date: Sat, 4 Jul 2026 14:20:00 +0900
+Message-Id: <multipart-alternative@example.com>
+Content-Type: multipart/alternative; boundary="ALT-BOUNDARY-0001"
+
+--ALT-BOUNDARY-0001
+Content-Type: text/html; charset=UTF-8
+
+<html><body><p>これは<b>HTML版</b>の本文です。</p><p>二段落目です。</p></body></html>
+
+--ALT-BOUNDARY-0001
+Content-Type: text/plain; charset=UTF-8
+
+これはプレーンテキスト版の本文です。
+
+--ALT-BOUNDARY-0001--

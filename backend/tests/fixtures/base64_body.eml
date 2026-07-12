@@ -1,0 +1,10 @@
+From: tanaka@example.com
+To: testml@example.com
+Subject: base64本文のテスト
+Date: Sun, 5 Jul 2026 08:00:00 +0900
+Message-Id: <base64-body@example.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+
+YmFzZTY044Gn44Ko44Oz44Kz44O844OJ44GV44KM44Gf5pys5paH44Gu44OG44K544OI44Gn44GZ
+44CCCuikh+aVsOihjOOBq+OCj+OBn+OCi+acrOaWh+OCkueiuuiqjeOBl+OBvuOBmeOAgg==
