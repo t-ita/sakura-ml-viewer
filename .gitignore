@@ -15,5 +15,9 @@ frontend/.vite/
 .DS_Store
 *.swp
 
-# ローカル専用のレビュー記録（リポジトリには含めない）
-REVIEW.md
+# JetBrains / IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
