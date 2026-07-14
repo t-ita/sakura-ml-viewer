@@ -68,4 +68,6 @@ export interface ArticleSearchParams {
   sender?: string
   date_from?: string
   date_to?: string
+  id_from?: number
+  id_to?: number
 }

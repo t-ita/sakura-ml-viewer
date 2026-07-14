@@ -7,6 +7,10 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   // サブディレクトリ(例: /ml-viewer/)への配置を前提に、生成アセットの参照は常に相対パスにする。
   base: './',
+  // ハッシュルーティングのためSPA用の history fallback は不要。既定の'spa'のままだと
+  // 存在しないパス(例: branding/title.txt が無い場合)にもindex.htmlを200で返してしまい、
+  // 本番のApache(fallbackなし=素の404)と挙動が食い違うため'mpa'にして無効化する。
+  appType: 'mpa',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

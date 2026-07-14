@@ -24,8 +24,10 @@ function mlv_handle_articles_list(): void
     $sender = mlv_query_param('sender', 254);
     $dateFrom = mlv_query_param('date_from', 10);
     $dateTo = mlv_query_param('date_to', 10);
+    $idFrom = mlv_query_int_param('id_from');
+    $idTo = mlv_query_int_param('id_to');
 
-    [$whereSql, $params] = mlv_build_article_where($q, $sender, $dateFrom, $dateTo);
+    [$whereSql, $params] = mlv_build_article_where($q, $sender, $dateFrom, $dateTo, $idFrom, $idTo);
 
     $pdo = mlv_db();
 
@@ -65,10 +67,26 @@ function mlv_handle_articles_list(): void
 /**
  * @return array{0:string,1:array<string,scalar>}
  */
-function mlv_build_article_where(string $q, string $sender, string $dateFrom, string $dateTo): array
-{
+function mlv_build_article_where(
+    string $q,
+    string $sender,
+    string $dateFrom,
+    string $dateTo,
+    ?int $idFrom = null,
+    ?int $idTo = null
+): array {
     $conditions = ["parse_status != 'error'"];
     $params = [];
+
+    if ($idFrom !== null) {
+        $conditions[] = 'id >= :id_from';
+        $params[':id_from'] = $idFrom;
+    }
+
+    if ($idTo !== null) {
+        $conditions[] = 'id <= :id_to';
+        $params[':id_to'] = $idTo;
+    }
 
     if ($q !== '') {
         $terms = preg_split('/\s+/u', $q, -1, PREG_SPLIT_NO_EMPTY) ?: [];
@@ -134,6 +152,27 @@ function mlv_query_param(string $name, int $maxLen): string
         json_error('invalid_request', "{$name} が長すぎます。", 400);
     }
     return $value;
+}
+
+/**
+ * 記事番号範囲(id_from/id_to)用。未指定はnull、1〜999999999の整数以外はinvalid_request。
+ * (配列が渡された場合もmlv_query_param()と同様に明示的にinvalid_requestとする)
+ */
+function mlv_query_int_param(string $name): ?int
+{
+    $value = $_GET[$name] ?? '';
+    if (!is_string($value)) {
+        json_error('invalid_request', "{$name} の形式が正しくありません。", 400);
+    }
+    $value = trim($value);
+    if ($value === '') {
+        return null;
+    }
+    // 先頭0を許さず1〜999999999(最大9桁)の範囲に厳密化する("0"自体も不可)
+    if (!preg_match('/^[1-9][0-9]{0,8}$/', $value)) {
+        json_error('invalid_request', "{$name} の形式が正しくありません。", 400);
+    }
+    return (int) $value;
 }
 
 /**

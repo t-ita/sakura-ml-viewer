@@ -6,23 +6,24 @@ interface ArticleHeaderProps {
   article: ArticleDetailType
 }
 
+/**
+ * 件名・送信者・日付はカードの折りたたみ時ヘッダー(ArticleCard)に既に表示されているため、
+ * ここではparse_status警告と添付一覧のみを表示する(DESIGN.md §6.4)。
+ */
 export function ArticleHeader({ article }: ArticleHeaderProps) {
+  if (article.parse_status !== 'partial' && article.attachments.length === 0) {
+    return null
+  }
+
   return (
     <div className="flex flex-col gap-2 border-b pb-4">
-      <h1 className="text-lg font-semibold break-words">{article.subject || '(件名なし)'}</h1>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-        <span>
-          {article.from_name ? `${article.from_name} <${article.from_addr}>` : article.from_addr}
-        </span>
-        <span>{formatDateTimeLabel(article.date)}</span>
-      </div>
       {article.parse_status === 'partial' && (
         <p className="text-xs text-amber-600 dark:text-amber-500">
           ※ このメールは一部を正しく解析できませんでした。表示内容が不完全な場合があります。
         </p>
       )}
       {article.attachments.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 pt-1">
+        <div className="flex flex-wrap gap-1.5">
           {article.attachments.map((att, i) => (
             <Badge key={i} variant="outline" className="gap-1 font-normal">
               <PaperclipIcon className="size-3" />
@@ -34,20 +35,6 @@ export function ArticleHeader({ article }: ArticleHeaderProps) {
       )}
     </div>
   )
-}
-
-function formatDateTimeLabel(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) {
-    return ''
-  }
-  return d.toLocaleString('ja-JP', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 function formatSize(bytes: number): string {
