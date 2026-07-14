@@ -31,7 +31,9 @@ foreach ([$dbPath, $dbPath . '-wal', $dbPath . '-shm'] as $f) {
 
 $GLOBALS['MLV_CONFIG'] = [
     'actives_file' => $testsDir . '/fixtures/actives_sample',
+    'admins_file' => $testsDir . '/fixtures/admins_sample',
     'db_path' => $dbPath,
+    'seq_file' => $testsDir . '/fixtures/does_not_exist_seq',
     'locks_dir' => $tmpDir . '/locks',
     'rate_limits' => [
         'login_email' => ['limit' => 5, 'window_s' => 900],
@@ -57,8 +59,10 @@ require $appDir . '/db.php';
 require $appDir . '/ratelimit.php';
 require $appDir . '/actives.php';
 require $appDir . '/mail_parser.php';
+require $appDir . '/indexer.php';
 require $appDir . '/auth.php';
 require $appDir . '/api.php';
+require $appDir . '/admin.php';
 
 $testFiles = glob($testsDir . '/*_test.php');
 sort($testFiles);

@@ -10,6 +10,7 @@ backend/tests/tmp/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/public/branding/
 
 # OS / editor
 .DS_Store

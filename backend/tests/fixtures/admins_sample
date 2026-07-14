@@ -1,0 +1,7 @@
+# admins file sample
+alice@example.com
+ADMIN@Example.com   m=1
+
+# コメント行と空行は無視される
+carol@example.com s=1 m=1
+	dave@example.com

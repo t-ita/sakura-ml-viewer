@@ -4,6 +4,7 @@ import { api, onUnauthorized, setCsrfToken } from '@/api/client'
 interface SessionState {
   status: 'loading' | 'authenticated' | 'anonymous'
   email: string | null
+  isAdmin: boolean
 }
 
 interface SessionContextValue extends SessionState {
@@ -15,15 +16,15 @@ interface SessionContextValue extends SessionState {
 const SessionContext = createContext<SessionContextValue | null>(null)
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<SessionState>({ status: 'loading', email: null })
+  const [state, setState] = useState<SessionState>({ status: 'loading', email: null, isAdmin: false })
 
   const refresh = useCallback(async () => {
     const res = await api.getSession()
     setCsrfToken(res.csrf_token)
     setState(
       res.authenticated
-        ? { status: 'authenticated', email: res.email ?? null }
-        : { status: 'anonymous', email: null },
+        ? { status: 'authenticated', email: res.email ?? null, isAdmin: res.is_admin ?? false }
+        : { status: 'anonymous', email: null, isAdmin: false },
     )
   }, [])
 
@@ -42,7 +43,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     const res = await api.login(email, password)
     setCsrfToken(res.csrf_token)
-    setState({ status: 'authenticated', email: res.email })
+    setState({ status: 'authenticated', email: res.email, isAdmin: res.is_admin })
   }, [])
 
   const logout = useCallback(async () => {

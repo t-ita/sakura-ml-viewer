@@ -54,6 +54,8 @@ function mlv_dispatch(): void
         'POST /auth/change-password' => 'mlv_handle_change_password',
         'GET /articles' => 'mlv_handle_articles_list',
         'GET /index/status' => 'mlv_handle_index_status',
+        'GET /admin/users' => 'mlv_handle_admin_users',
+        'GET /admin/articles' => 'mlv_handle_admin_articles',
     ];
 
     $key = $method . ' ' . $path;

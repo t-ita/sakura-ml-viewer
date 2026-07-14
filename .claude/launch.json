@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "frontend", "run", "dev", "--", "--port", "5173", "--strictPort"],
       "port": 5173
+    },
+    {
+      "name": "backend-dev",
+      "runtimeExecutable": "php",
+      "runtimeArgs": ["-S", "localhost:8099", "-t", "backend/public"],
+      "port": 8099
     }
   ]
 }

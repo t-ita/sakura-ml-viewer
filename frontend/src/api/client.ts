@@ -1,4 +1,7 @@
 import type {
+  AdminArticlesResponse,
+  AdminArticleSearchParams,
+  AdminUsersResponse,
   ArticleDetail,
   ArticleListResponse,
   ArticleSearchParams,
@@ -130,5 +133,13 @@ export const api = {
 
   getIndexStatus(): Promise<IndexStatus> {
     return request<IndexStatus>('/index/status')
+  },
+
+  getAdminUsers(): Promise<AdminUsersResponse> {
+    return request<AdminUsersResponse>('/admin/users')
+  },
+
+  listAdminArticles(params: AdminArticleSearchParams): Promise<AdminArticlesResponse> {
+    return request<AdminArticlesResponse>(`/admin/articles${toQueryString({ ...params })}`)
   },
 }

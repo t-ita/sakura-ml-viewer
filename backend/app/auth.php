@@ -62,6 +62,7 @@ function mlv_handle_auth_session(): void
                 'authenticated' => true,
                 'email' => $email,
                 'csrf_token' => mlv_issue_csrf_token(),
+                'is_admin' => mlv_is_admin($email),
             ]);
         }
         // 退会済み: 古いセッションを破棄して未認証として扱う
@@ -103,7 +104,11 @@ function mlv_handle_login(): void
     $stmt = mlv_db()->prepare('UPDATE users SET last_login_at = :t WHERE email = :e');
     $stmt->execute([':t' => time(), ':e' => $email]);
 
-    json_response(['email' => $email, 'csrf_token' => mlv_issue_csrf_token()]);
+    json_response([
+        'email' => $email,
+        'csrf_token' => mlv_issue_csrf_token(),
+        'is_admin' => mlv_is_admin($email),
+    ]);
 }
 
 function mlv_verify_login_credentials(string $email, string $password): bool

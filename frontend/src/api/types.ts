@@ -4,11 +4,13 @@ export interface SessionResponse {
   authenticated: boolean
   email?: string
   csrf_token: string
+  is_admin?: boolean
 }
 
 export interface LoginResponse {
   email: string
   csrf_token: string
+  is_admin: boolean
 }
 
 export interface MessageResponse {
@@ -70,4 +72,57 @@ export interface ArticleSearchParams {
   date_to?: string
   id_from?: number
   id_to?: number
+}
+
+// 管理者機能（改訂3）。DESIGN.md §4.5 に対応する。
+
+export interface AdminUserItem {
+  email: string
+  password_registered: boolean
+  created_at: string | null
+  password_updated_at: string | null
+  last_login_at: string | null
+  pending_token: boolean
+}
+
+export interface AdminUsersResponse {
+  summary: {
+    active_members: number
+    password_registered: number
+    orphan_users: number
+  }
+  members: AdminUserItem[]
+  orphan_users: AdminUserItem[]
+}
+
+export type AdminArticleStatus = 'all' | 'ok' | 'partial' | 'error'
+
+export interface AdminArticleItem {
+  id: number
+  subject: string
+  from_addr: string
+  date: string | null
+  parse_status: ParseStatus
+  indexed_at: string
+}
+
+export interface AdminArticlesResponse {
+  summary: {
+    seq: number
+    indexed_max: number
+    pending: number
+    count_ok: number
+    count_partial: number
+    count_error: number
+  }
+  items: AdminArticleItem[]
+  total: number
+  page: number
+  per_page: number
+}
+
+export interface AdminArticleSearchParams {
+  page?: number
+  per_page?: number
+  status?: AdminArticleStatus
 }

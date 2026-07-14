@@ -109,6 +109,7 @@ require_once __DIR__ . '/indexer.php';
 require_once __DIR__ . '/mailer.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/api.php';
+require_once __DIR__ . '/admin.php';
 require_once __DIR__ . '/router.php';
 
 mlv_db(); // 接続確立とマイグレーション適用をこの時点で実行

@@ -16,7 +16,18 @@ declare(strict_types=1);
  */
 function mlv_load_actives(): ?array
 {
-    $path = mlv_config('actives_file');
+    return mlv_load_address_list(mlv_config('actives_file'));
+}
+
+/**
+ * activesと同一形式（1行1アドレス、#コメント・空行無視、先頭トークンのみ採用、小文字化）の
+ * プレーンテキストファイルを読み込み、正規化済みメールアドレスの集合を返す。
+ * 読み取り不能な場合は null を返す（例外は投げない）。
+ *
+ * @return array<string,true>|null
+ */
+function mlv_load_address_list(string $path): ?array
+{
     $fp = @fopen($path, 'r');
     if ($fp === false) {
         return null;
@@ -41,6 +52,54 @@ function mlv_load_actives(): ?array
     }
 
     return $set;
+}
+
+/**
+ * 管理者リストファイル（admins。§5.8）を読み込む。
+ * config.phpに admins_file キーが無い、またはファイルが読めない場合は null を返す
+ * （activesと異なりフェイルクローズしない: 管理機能が任意であり「無い」ことが正常状態のため）。
+ *
+ * @return array<string,true>|null
+ */
+function mlv_load_admins(): ?array
+{
+    $path = $GLOBALS['MLV_CONFIG']['admins_file'] ?? null;
+    if (!is_string($path) || $path === '') {
+        return null;
+    }
+    return mlv_load_address_list($path);
+}
+
+/**
+ * 管理者判定（§5.8）。以下の3条件をすべて満たすときのみtrue:
+ *   認証済み ∧ actives在籍 ∧ adminsファイルに記載
+ * activesを外れた者はadminsに残っていても管理者ではない（退会者即時遮断の原則を適用）。
+ */
+function mlv_is_admin(string $email): bool
+{
+    $admins = mlv_load_admins();
+    if ($admins === null) {
+        return false;
+    }
+    $email = strtolower(trim($email));
+    if (!isset($admins[$email])) {
+        return false;
+    }
+    return mlv_is_active_member($email);
+}
+
+/**
+ * 管理系API共通ミドルウェア。認証必須メンバーであることに加え管理者判定を行い、
+ * 非管理者は一般の403(forbidden)と同一形式・同一文言で終了させる
+ * （管理機能の存在や判定結果を応答から推測させないため。§7.7）。
+ */
+function mlv_require_admin(): string
+{
+    $email = mlv_require_authenticated_member();
+    if (!mlv_is_admin($email)) {
+        json_error('forbidden', 'メンバー資格が確認できませんでした。', 403);
+    }
+    return $email;
 }
 
 /**

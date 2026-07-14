@@ -19,6 +19,10 @@ return [
     'locks_dir'    => '/home/ACCOUNT/mlviewer-data/locks',
     'log_file'     => '/home/ACCOUNT/mlviewer-data/app.log',
 
+    // 管理者リスト（任意。§5.8）。キー自体を省略してもよい（その場合は管理機能が無効になるだけ）。
+    // activesと同一形式（1行1アドレス、#コメント可）。必ずドキュメントルート外（mlviewer-data配下、パーミッション600）に置くこと。
+    'admins_file'  => '/home/ACCOUNT/mlviewer-data/admins',
+
     // Web公開URL（パスワード設定リンクの生成に使用）
     'base_url' => 'https://example.sakura.ne.jp/ml-viewer',
 
